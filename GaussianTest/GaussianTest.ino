@@ -68,19 +68,22 @@ delay(100);
 
 
 void loop() {
-  gTranSteps = 256;       //+/- 10% tone_duration, eack step 0.5ms (tone_duration = 160ms)
+  // following sets the gaussian transition. About 10% of tone time with maximum number of stesps
+  //    will give cleanest sideband result. The transition is positioned +/- of tone transition.
+  gTranSteps = 256;                 //must be 32*n where n is gTranInterpFactor
   gTranMicrosPerStep = 64;         //per gaussian transition step
   gTranInterpFactor = gTranSteps / 32;     //number of interpolation steps per increment of LookUpTable (LUT)
 
   #define FT4
   #ifdef FT4
-gTranSteps = 128;       //+/- 16% tone_duration, eack step 0.5ms (tone_duration = 48ms)
-gTranMicrosPerStep = 80;         //per gaussian transition step
+gTranSteps = 128;                 //must be 32*n where n is gTranInterpFactor
+gTranMicrosPerStep = 80;         //per gaussian transition step, minimum about 60 microsec
 gTranInterpFactor = gTranSteps / 32;     //number of interpolation steps per increment of LookUpTable (LUT)
   #endif
 
 
-      long lastFTW = 668257756;
+      long lastFTW = 669871733;     //fixed value for this test example (28.074 MHz)
+                                    //Hz per FTW increment = 180000000 / 2^32
       //long nextFTW = 1044;        //6.25*7 Hz in FTW units
       long nextFTW = lastFTW + 1491;        //20.8333 * 3 Hz in FTW units
       bool PowerUp = false;
